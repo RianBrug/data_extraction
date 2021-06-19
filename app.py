@@ -13,11 +13,11 @@ import pandas as pd
 filepath = 'modelo_arquivo.txt'
 with open(filepath) as fp:
     line = fp.readline()
+    line_columns = line.split()
     cnt = 1
     while line:
-        # print(" ISSO EH PRINT ? ")
-        if(int(line[7]) == 0):
-            line_columns = line.split()
+        register_header = line_columns[0]
+        if(int(register_header[7]) == 0):
             nameCompany1 = ''.join([i for i in line_columns[2] if not i.isdigit()])
             nameCompany = [nameCompany1 + " " + line_columns[3]]
             df = pd.DataFrame(
@@ -27,5 +27,7 @@ with open(filepath) as fp:
                             "Nome da Cidade", "CEP", "UF"],
                             )
             df["Nome da Empresa"] = nameCompany
-        line = fp.readline()
+            break
+        # if(int(line[]))
+
         cnt += 1
