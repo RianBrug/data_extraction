@@ -27,7 +27,13 @@ with open(filepath) as fp:
                             "Nome da Cidade", "CEP", "UF"],
                             )
             df["Nome da Empresa"] = nameCompany
-            break
-        # if(int(line[]))
 
+        register_lote = line_columns[1]
+        if(int(register_lote[7]) == 1):
+            company_subscription_number = register_lote[0:14]
+            df["Num de Inscrição da Empresa"] = company_subscription_number
+
+        bank_name = line_columns[4]
+        df["Nome do Banco"] = bank_name
+        break
         cnt += 1
