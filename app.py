@@ -9,16 +9,19 @@
 #   == 9 ~> reg trailer file
 
 import pandas as pd
+import locale
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 filepath = 'modelo_arquivo.txt'
 with open(filepath) as fp:
     header_reg = False  # ctrl if df_header_lote already have registeredd header file data
+    header_detail = False  # II
 
     for line in fp:
         line = line.split()
 
-        register_checker = line[0]
-        line_list = register_checker.split()
+        line_list = line[0].split()
+
         if(header_reg is False and line_list[0][7] == '0'):
             company_name_1 = ''.join([i for i in line[2] if not i.isdigit()])
             company_name = [company_name_1 + " " + line[3]]
@@ -51,15 +54,25 @@ with open(filepath) as fp:
 
         header_reg = True
 
-        import pdb; pdb.set_trace()
         if(header_reg and line_list[0][7] == '3'):
-            register_detail = line[1]
-
-            customer_name_1 = ''.join([i for i in line[0] if not i.isdigit()])
-            customer_name = [customer_name_1[1:] + " " + line[1] + line[2]]
-            df_detail_seg = pd.DataFrame(
-                            columns=["Nome do Favorecido",
-                            "Data de Pagamento", "Valor do Pagamento",
-                            "Número do Documento Atribuído pela Empresa", "Forma de Lançamento"],
-                            )
+            # register_detail = line[1]
+            if(header_detail):
+                customer_name_1 = ''.join([i for i in line[0] if not i.isdigit()])
+                customer_name = [customer_name_1[1:] + " " + line[1] + " " + line[2]]
+                df_detail_seg = pd.DataFrame(
+                                columns=["Nome do Favorecido",
+                                "Data de Pagamento", "Valor do Pagamento",
+                                "Número do Documento Atribuído pela Empresa", "Forma de Lançamento"],
+                                )
             df_detail_seg["Nome do Favorecido"] = customer_name
+            payment_date_and_price = ''.join([i for i in line[4] if i.isdigit()])
+            df_detail_seg["Data de Pagamento"] = payment_date_and_price[0:2] + "/" \
+                                                + payment_date_and_price[2:4] \
+                                                + "/" + payment_date_and_price[4:8]
+
+            price_with_comma = locale.currency(float(payment_date_and_price[8:-2] + "." + payment_date_and_price[-2:]))
+            df_detail_seg["Valor do Pagamento"] = price_with_comma
+
+
+        header_detail = True
+        import pdb; pdb.set_trace()
