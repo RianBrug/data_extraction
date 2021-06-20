@@ -30,7 +30,12 @@ with open(filepath) as fp:
 
         register_lote = line_columns[1]
         if(int(register_lote[7]) == 1):
-            company_subscription_number = register_lote[0:14]
+            company_subscription_number = register_lote[1:15]
+            company_subscription_number = company_subscription_number[:2] + \
+                                            "." + company_subscription_number[2:5] + \
+                                            "." + company_subscription_number[5:8] + \
+                                            "/" + company_subscription_number[8:12] + \
+                                            "-" + company_subscription_number[12:15]
             df["Num de Inscrição da Empresa"] = company_subscription_number
 
         bank_name = line_columns[4]
