@@ -12,7 +12,7 @@ import pandas as pd
 import locale
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
-print("Starting data extraction from 'modelo_arquivo.txt'...")
+print("Starting data extraction from 'modelo_arquivo.txt'...", "\n")
 
 filepath = 'modelo_arquivo.txt'
 with open(filepath) as fp:
@@ -25,6 +25,7 @@ with open(filepath) as fp:
         line_list = line[0].split()
 
         if(line_list[0][7] == '0'):
+            print("Reading Archive Register Header...")
             company_name_1 = ''.join([i for i in line[2] if not i.isdigit()])
             company_name = company_name_1 + " " + line[3]
             bank_name = line[4]
@@ -37,8 +38,10 @@ with open(filepath) as fp:
                                 "Nome da Cidade", "CEP", "UF"],
                                 )
                 ctrl_creation_df_header = True
-
+                print("Creating Header DataFrame to add data later...")
+            print("Step finished.", "\n")
         if(ctrl_creation_df_header and line_list[0][7] == '1'):
+            print("Reading Batch Register Header...")
             register_lote = line[1]
             company_subscription_number = register_lote[1:15]
             company_subscription_number_formated = company_subscription_number[:2] + \
@@ -53,15 +56,15 @@ with open(filepath) as fp:
             cep_number_formated = cep_number[0:5] + "-" + cep_number[5:]
             city_name = city_name_and_uf[:-2]
             uf = city_name_and_uf[-2:]
-
+            print("Step finished.")
             row = pd.Series([company_name, company_subscription_number_formated,
                             bank_name, address, address_number, city_name,
                             cep_number_formated, uf], index=df_header_lote.columns)
 
             df_header_lote = df_header_lote.append(row, ignore_index=True)
-
+            print("Added data to Header DataFrame.", "\n")
         if(ctrl_creation_df_header and line_list[0][7] == '3'):
-
+            print("Reading Segment Detail Record...")
             if(ctrl_creation_df_detail is False):
                 df_detail_seg = pd.DataFrame(
                                 columns=["Nome do Favorecido",
@@ -69,6 +72,7 @@ with open(filepath) as fp:
                                 "Número do Documento Atribuído pela Empresa", "Forma de Lançamento"],
                                 )
                 ctrl_creation_df_detail = True
+                print("Created Details DataFrame to add data later...")
 
             customer_name_1 = ''.join([i for i in line[0] if not i.isdigit()])
             customer_name = customer_name_1[1:] + " " + line[1] + " " + line[2]
@@ -82,7 +86,17 @@ with open(filepath) as fp:
             doc_number_attr_by_company = line[3]
             payment_method = ("Crédito em Conta Corrente" if int(line[6]) == 0
                                                         else "Crédito em Conta Poupança")
-
+            print("Step finished")
             row_details = pd.Series([customer_name, payment_date, price_with_comma,
                                     doc_number_attr_by_company, payment_method], index=df_detail_seg.columns)
+
+            df_details_columns = pd.DataFrame(["Nome do Favorecido",
+            "Data de Pagamento", "Valor do Pagamento",
+            "Número do Documento Atribuído pela Empresa", "Forma de Lançamento"], index=df_detail_seg.columns)
+            ## used to append into df_header_lote before concat df_detail_seg
+
             df_detail_seg = df_detail_seg.append(row_details, ignore_index=True)
+            print("Added data to Segment Details DataFrame.", "\n")
+    import pdb; pdb.set_trace()
+    print("Starting merge DataFrames to prepare exportation...")
+    major_df = df_header_lote.append(df_details_columns, ignore_index=True)
