@@ -27,6 +27,7 @@ with open(filepath) as fp:
         if(line_list[0][7] == '0'):
             company_name_1 = ''.join([i for i in line[2] if not i.isdigit()])
             company_name = company_name_1 + " " + line[3]
+            bank_name = line[4]
 
             if(ctrl_creation_df_header is False):
                 df_header_lote = pd.DataFrame(
@@ -35,7 +36,7 @@ with open(filepath) as fp:
                                 "Nome da Rua", "Número do Local",
                                 "Nome da Cidade", "CEP", "UF"],
                                 )
-            bank_name = line[4]
+                ctrl_creation_df_header = True
 
         if(ctrl_creation_df_header and line_list[0][7] == '1'):
             register_lote = line[1]
@@ -59,8 +60,6 @@ with open(filepath) as fp:
 
             df_header_lote = df_header_lote.append(row, ignore_index=True)
 
-        ctrl_creation_df_header = True
-
         if(ctrl_creation_df_header and line_list[0][7] == '3'):
 
             if(ctrl_creation_df_detail is False):
@@ -72,7 +71,7 @@ with open(filepath) as fp:
                 ctrl_creation_df_detail = True
 
             customer_name_1 = ''.join([i for i in line[0] if not i.isdigit()])
-            customer_name = [customer_name_1[1:] + " " + line[1] + " " + line[2]]
+            customer_name = customer_name_1[1:] + " " + line[1] + " " + line[2]
             payment_date_and_price = ''.join([i for i in line[4] if i.isdigit()])
             payment_date = payment_date_and_price[0:2] + "/" \
                             + payment_date_and_price[2:4] \
