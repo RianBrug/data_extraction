@@ -90,13 +90,26 @@ with open(filepath) as fp:
             row_details = pd.Series([customer_name, payment_date, price_with_comma,
                                     doc_number_attr_by_company, payment_method], index=df_detail_seg.columns)
 
-            df_details_columns = pd.DataFrame(["Nome do Favorecido",
-            "Data de Pagamento", "Valor do Pagamento",
-            "Número do Documento Atribuído pela Empresa", "Forma de Lançamento"], index=df_detail_seg.columns)
-            ## used to append into df_header_lote before concat df_detail_seg
+            series_details_columns = pd.Series(["Nome do Favorecido", "Data de Pagamento",
+                                    "Valor do Pagamento", "Número do Documento Atribuído pela Empresa",
+                                    "Forma de Lançamento"], index=df_detail_seg.columns)
+                                    ## used to append into df_header_lote before concat df_detail_seg
+
+            df_series_details_columns = pd.DataFrame([series_details_columns])
 
             df_detail_seg = df_detail_seg.append(row_details, ignore_index=True)
             print("Added data to Segment Details DataFrame.", "\n")
-    import pdb; pdb.set_trace()
-    print("Starting merge DataFrames to prepare exportation...")
-    major_df = df_header_lote.append(df_details_columns, ignore_index=True)
+
+    # import pdb; pdb.set_trace()
+
+    print("Starting merge DataFrames to prepare exportation...", "\n")
+
+    frames = [df_header_lote, df_series_details_columns]
+    major_df = df_header_lote.append(df_detail_seg, ignore_index=True)
+    # this part is uncomplete, should be appending the 'df_series_details_columns'
+    # to its values be a new roll to represent 'df_detail_seg' columns
+
+    print("Export DataFrames to CSV.", "\n")
+    major_df.to_csv('report_csv.csv', index=False, sep=';')
+    print("Finished." "\n")
+    print("File 'report_csv' located in project's root dir.")

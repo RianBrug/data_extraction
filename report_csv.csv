@@ -1,0 +1,5 @@
+Nome da Empresa;Num de Inscrição da Empresa;Nome do Banco;Nome da Rua;Número do Local;Nome da Cidade;CEP;UF;Nome do Favorecido;Data de Pagamento;Valor do Pagamento;Número do Documento Atribuído pela Empresa;Forma de Lançamento
+GRUPO NEXXERA;95.774.212/0001-32;HSBC;Rua Madalena Barbi;181;Centro-Florianopolis;88015-190;SC;;;;;
+;;;;;;;;EMPRESA FORNECEDOR 1;07/06/2017;R$ 0,10;0000000001;Crédito em Conta Corrente
+;;;;;;;;EMPRESA FORNECEDOR 2;07/06/2017;R$ 200,20;0000000002;Crédito em Conta Corrente
+;;;;;;;;EMPRESA FORNECEDOR 3;07/06/2017;R$ 30300,30;0000000003;Crédito em Conta Corrente
